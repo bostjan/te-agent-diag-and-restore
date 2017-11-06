@@ -189,12 +189,12 @@ else
 fi
 
 _echo "  Running processes information (before agent restart)..."
-ps auxef       > $DATADIRNAME/pre-ps-auxef.out
-ps -eLf        > $DATADIRNAME/pre-ps-eLf.out
+ps auxef       > $DATADIRNAME/prerestart-ps-auxef.out
+ps -eLf        > $DATADIRNAME/prerestart-ps-eLf.out
 _echo "    Open ports (TCP and UDP)..."
-netstat -lntup > $DATADIRNAME/pre-netstat-lntup.out
+netstat -lntup > $DATADIRNAME/prerestart-netstat-lntup.out
 _echo "    Open files..."
-lsof -n        > $DATADIRNAME/pre-lsof-n.out
+lsof -n        > $DATADIRNAME/prerestart-lsof-n.out
 
 
 
