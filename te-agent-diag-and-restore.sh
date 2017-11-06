@@ -105,9 +105,9 @@ fi
 
 ### Check if all packages are installed
 #
-       REQUIRED_PROGRAMS="dmidecode lspci    lsusb    pstree lsof strace sqlite3 netstat"
-REQUIRED_PACKAGES_UBUNTU="dmidecode pciutils usbutils psmisc lsof strace sqlite3 net-tools"
-REQUIRED_PACKAGES_REDHAT="dmidecode pciutils usbutils psmisc lsof strace sqlite  net-tools"
+       REQUIRED_PROGRAMS="dmidecode lspci    lsusb    pstree lsof strace sqlite3 netstat   hdparm"
+REQUIRED_PACKAGES_UBUNTU="dmidecode pciutils usbutils psmisc lsof strace sqlite3 net-tools hdparm"
+REQUIRED_PACKAGES_REDHAT="dmidecode pciutils usbutils psmisc lsof strace sqlite  net-tools hdparm"
 if which $REQUIRED_PROGRAMS &> /dev/null; then
     _echo "All required programs found ($REQUIRED_PROGRAMS)"
 else
@@ -142,18 +142,42 @@ _echo "Output directory: $DATADIRNAME"
 _echo "Collecting system information..."
 _echo "  Hardware and basic host information..."
 dmidecode      > $DATADIRNAME/sys-dmidecode.out || true   # Does not work in containers
+lspci          > $DATADIRNAME/sys-lspci.out
+lsusb          > $DATADIRNAME/sys-lsusb.out
 mount          > $DATADIRNAME/sys-mount.out
 df -h          > $DATADIRNAME/sys-df-h.out
 df -ih         > $DATADIRNAME/sys-df-ih.out
 free           > $DATADIRNAME/sys-free.out
-uname -a       > $DATADIRNAME/sys-uname-a
+uname -a       > $DATADIRNAME/sys-uname-a.out
+export         > $DATADIRNAME/sys-export.out
+ifconfig -a    > $DATADIRNAME/sys-ifconfig-a.out
+ip addr        > $DATADIRNAME/sys-ip-addr.out
+ip link        > $DATADIRNAME/sys-ip-link.out
+route -n       > $DATADIRNAME/sys-route-n.out
+route -n -6    > $DATADIRNAME/sys-route-n-6.out
+arp -n         > $DATADIRNAME/sys-arp-n.out
+ip -4 neigh    > $DATADIRNAME/sys-ip-4-neigh.out
+ip -6 neigh    > $DATADIRNAME/sys-ip-6-neigh.out
+ip -4 route    > $DATADIRNAME/sys-ip-4-route.out
+ip -6 route    > $DATADIRNAME/sys-ip-6-route.out
+
+
+_echo "  Disk information..."
+# /dev/nvmeXnX devices are not supported by hdparm
+for DISKDEV in `cd /dev && ls sd? xvd?`; do
+    hdparm -i /dev/$DISKDEV > $DATADIRNAME/diskinfo-$DISKDEV.out
+done
+
 
 _echo "  /proc information..."
-cat /proc/cmdline   > $DATADIRNAME/sys-proc-cmdline.out
-cat /proc/diskstats > $DATADIRNAME/sys-proc-diskstats.out
-cat /proc/loadavg   > $DATADIRNAME/sys-proc-loadavg.out
-cat /proc/meminfo   > $DATADIRNAME/sys-proc-meminfo.out
-cat /proc/uptime    > $DATADIRNAME/sys-proc-uptime.out
+cat /proc/1/cgroup  > $DATADIRNAME/proc-1-cgroup.out
+cat /proc/1/uid_map > $DATADIRNAME/proc-1-uid_map.out
+
+PROCFILES="cmdline cpuinfo diskstats loadavg meminfo misc modules mounts partitions stat uptime version"
+for PROCFILE in $PROCFILES; do
+    cat /proc/$PROCFILE   > $DATADIRNAME/proc-$PROCFILE.out
+done
+
 
 _echo "  List installed packages..."
 if [ "$AGENT_OS_DISTRO" == "ubuntu" ]; then
@@ -167,7 +191,9 @@ fi
 _echo "  Running processes information (before agent restart)..."
 ps auxef       > $DATADIRNAME/pre-ps-auxef.out
 ps -eLf        > $DATADIRNAME/pre-ps-eLf.out
+_echo "    Open ports (TCP and UDP)..."
 netstat -lntup > $DATADIRNAME/pre-netstat-lntup.out
+_echo "    Open files..."
 lsof -n        > $DATADIRNAME/pre-lsof-n.out
 
 
@@ -207,7 +233,12 @@ fi
 #
 _echo "Collecting agent and system log files..."
 mkdir $DATADIRNAME/log
-cp /var/log/te-agent*   $DATADIRNAME/log/
+
+if [ -d /var/log/agent ]; then
+    cp -pR /var/log/agent   $DATADIRNAME/log/
+else
+    cp /var/log/te-agent*   $DATADIRNAME/log/
+fi
 if [ "$AGENT_OS_DISTRO" == "ubuntu" ]; then
     cp /var/log/kern.*     $DATADIRNAME/log/
     cp /var/log/syslog.*   $DATADIRNAME/log/
