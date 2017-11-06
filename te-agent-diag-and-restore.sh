@@ -17,12 +17,12 @@ set -u
 #
 _echo() {
     MSG="$1"
-    echo "AgentFixup: $MSG"
+    echo "AgentDiag: $MSG"
 }
 
 _fatalError() {
     MSG="$1"
-    echo "AgentFixup ERROR: $MSG"
+    echo "AgentDiag ERROR: $MSG"
     exit 1
 }
 
