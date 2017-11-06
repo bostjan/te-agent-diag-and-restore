@@ -210,7 +210,13 @@ _manageAgentService "restart"
 _echo "(Waiting for a moment to allow the agent to analyze the database)"
 sleep 2
 _echo "Checking if agent result cache database is currupted..."
-SQLITE_ERROR_COUNT=`tail -n 300 /var/log/te-agent.log | grep "Agent version" -A5 | grep -v 'Vacuuming database' | grep -Ec '(VACUUM|err=)'`
+
+if [ -d /var/log/agent ]; then
+    AGENT_LOGFILE="/var/log/agent/te-agent.log"
+else
+    AGENT_LOGFILE="/var/log/te-agent.log"
+fi
+SQLITE_ERROR_COUNT=`tail -n 300 $AGENT_LOGFILE | grep "Agent version" -A5 | grep -v 'Vacuuming database' | grep -Ec '(VACUUM|err=)'`
 if [ "$SQLITE_ERROR_COUNT" -eq 0 ]; then
     _echo "  No corruption in result cache detected, skipping adding it to the diagnostics package."
 else
