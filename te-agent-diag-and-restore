@@ -273,6 +273,7 @@ _echo "Upon successful upload you will see the URL where the data can be retriev
 echo
 echo -n "    "
 curl \
+  -4 \
   --upload-file \
   ./$DATAFILE \
   https://transfer.sh/$DATAFILE
