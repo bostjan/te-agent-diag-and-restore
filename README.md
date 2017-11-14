@@ -8,9 +8,12 @@ Helper script that collects and uploads ThousandEyes Enterprise Agent diagnostic
 
 To collect and upload diagnostic data, copy and paste the following into the agent SSH console:
 
+    cd /var &&
     curl   -o te-agent-diag-and-restore https://raw.githubusercontent.com/bostjan/te-agent-diag-and-restore/master/te-agent-diag-and-restore &&
     chmod 755 te-agent-diag-and-restore &&
     ./te-agent-diag-and-restore
+
+The command assumes there is enough free disk space in /var. If not, adjust the first line above accordingly.
 
 At the end of output there will be an URL that can be used to download the collected data.
 Send that URL to support@thousandeyes.com.
