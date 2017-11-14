@@ -246,13 +246,13 @@ else
     cp /var/log/te-agent*   $DATADIRNAME/log/
 fi
 if [ "$AGENT_OS_DISTRO" == "ubuntu" ]; then
-    cp /var/log/kern.*     $DATADIRNAME/log/
-    cp /var/log/syslog.*   $DATADIRNAME/log/
+    cp /var/log/kern.log*  $DATADIRNAME/log/
+    cp /var/log/syslog*    $DATADIRNAME/log/
     cp /var/log/dpkg*      $DATADIRNAME/log/
     cp -pR /var/log/apt    $DATADIRNAME/log/
 elif [ "$AGENT_OS_DISTRO" == "redhat" ]; then
     cp /var/log/messages   $DATADIRNAME/log/
-    cp /var/log/yum.*      $DATADIRNAME/log/
+    cp /var/log/yum.log*   $DATADIRNAME/log/
 else
     _fatalError "Internal error"
 fi
