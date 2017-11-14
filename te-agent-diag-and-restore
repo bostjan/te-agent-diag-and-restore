@@ -263,13 +263,16 @@ fi
 #
 DATAFILE="$DATADIRNAME.tar.gz"
 URLFILE="$DATAFILE.url"
-_echo "Compressing the collected information..."
+_echo "Creating the diagnostic package:"
+_echo "  Compressing the data..."
 tar -c -z -f $DATAFILE $DATADIRNAME
+_echo "  Removing temporary data collection directory..."
 rm -rf $DATADIRNAME
 _echo "  Data collection complete."
-_echo "Generated diagnostic file: $DATAFILE"
+_echo "  Generated diagnostic file: $DATAFILE"
 _echo ""
 _echo "Uploading the generated file using transfer.sh service."
+_echo "  Progress:"
 echo
 echo -n "    "
 curl \
@@ -278,7 +281,7 @@ curl \
   ./$DATAFILE \
   --progress-bar \
   -o $URLFILE \
-  https://transfer.sh/$DATAFILE
+  https://transfer.s/$DATAFILE
 
 UPLOAD_RESULT="$?"
 
@@ -288,21 +291,31 @@ if [ "$UPLOAD_RESULT" == "0" ]; then
     URL=`cat $URLFILE`
     rm -f $DATAFILE
     rm -f $URLFILE
-    _echo "Transfer successful (local diagnostic package file removed)."
+    _echo "  Transfer successful (local diagnostic package file removed)."
     _echo ""
-    _echo "Diagnostic data download URL:"
+    _echo "  Diagnostic data download URL:"
     _echo "    $URL"
     _echo ""
     _echo "Take the URL above and send it over to support@thousandeyes.com."
     echo
 else
     _echo "WARNING: Automatic upload failed!"
-    _echo "Most likely reason: proxy usage is required."
-    _echo "Please upload the diagnostic package manually using the following command:"
+    _echo "  Most likely reason: proxy usage is required."
+    _echo ""
+    _echo "What now?"
+    _echo "  Please upload the diagnostic package manually."
+    _echo "  Use the following command (fill in the missing proxy information):"
     echo
     echo "https_proxy=\"http://user:pass@proxy-server:port/\"   curl   --upload-file ./$DATAFILE   https://transfer.sh/$DATAFILE"
     echo
-    _echo "Once the uplaod is successfull, you will see the URL of the uploaded file."
-    _echo "Take that URL and send it over to support@thousandeyes.com."
+    _echo "Once the upload is successfull:"
+    _echo "  You will see the URL of the uploaded file."
+    _echo "  Take that URL and send it over to support@thousandeyes.com."
+    _echo ""
+    _echo "At the end, you will probably also want to remove the local file to save disk space:"
+    _echo "  Use the following command:"
     echo
+    echo "rm $DATAFILE"
+    echo
+
 fi
