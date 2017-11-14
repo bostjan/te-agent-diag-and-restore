@@ -281,7 +281,7 @@ curl \
   ./$DATAFILE \
   --progress-bar \
   -o $URLFILE \
-  https://transfer.s/$DATAFILE
+  https://transfer.sh/$DATAFILE
 
 UPLOAD_RESULT="$?"
 
