@@ -161,7 +161,9 @@ ip -6 neigh    > $DATADIRNAME/sys-ip-6-neigh.out
 ip -4 route    > $DATADIRNAME/sys-ip-4-route.out
 ip -6 route    > $DATADIRNAME/sys-ip-6-route.out
 
-cat /etc/localtime   > $DATADIRNAME/etc-localtime
+mkdir -p $DATADIRNAME/etc
+cp /etc/localtime   $DATADIRNAME/etc/
+cp /etc/timezone    $DATADIRNAME/etc/
 
 
 _echo "  Network interface configuration and dhcp information..."
@@ -260,7 +262,7 @@ fi
 ### Collect the log files
 #
 _echo "Collecting agent and system log files..."
-mkdir $DATADIRNAME/log
+mkdir $DATADIRNAME/var/log
 
 mkdir -p $DATADIRNAME/var
 if [ -d /var/log/agent ]; then
