@@ -247,7 +247,8 @@ else
     _manageAgentService "stop"
 
     _echo "    Moving the corrupted DB to diagnostics package"
-    mv /var/lib/te-agent/te-agent.sqlite $DATADIRNAME/te-agent.sqlite.CORRUPTED
+    mkdir -p $DATADIRNAME/var/lib/te-agent
+    mv /var/lib/te-agent/te-agent.sqlite $DATADIRNAME/var/lib/te-agent/te-agent.sqlite.CORRUPTED
 
     _echo "    Starting the agent (it will regenerate empty result cache database)"
     _manageAgentService "start"
@@ -261,19 +262,20 @@ fi
 _echo "Collecting agent and system log files..."
 mkdir $DATADIRNAME/log
 
+mkdir -p $DATADIRNAME/var
 if [ -d /var/log/agent ]; then
-    cp -pR /var/log/agent   $DATADIRNAME/log/
+    cp -pR /var/log/agent   $DATADIRNAME/var/log/
 else
-    cp /var/log/te-agent*   $DATADIRNAME/log/
+    cp /var/log/te-agent*   $DATADIRNAME/var/log/
 fi
 if [ "$AGENT_OS_DISTRO" == "ubuntu" ]; then
-    cp /var/log/kern.log*  $DATADIRNAME/log/
-    cp /var/log/syslog*    $DATADIRNAME/log/
-    cp /var/log/dpkg*      $DATADIRNAME/log/
-    cp -pR /var/log/apt    $DATADIRNAME/log/
+    cp /var/log/kern.log*  $DATADIRNAME/var/log/
+    cp /var/log/syslog*    $DATADIRNAME/var/log/
+    cp /var/log/dpkg*      $DATADIRNAME/var/log/
+    cp -pR /var/log/apt    $DATADIRNAME/var/log/
 elif [ "$AGENT_OS_DISTRO" == "redhat" ]; then
-    cp /var/log/messages   $DATADIRNAME/log/
-    cp /var/log/yum.log*   $DATADIRNAME/log/
+    cp /var/log/messages   $DATADIRNAME/var/log/
+    cp /var/log/yum.log*   $DATADIRNAME/var/log/
 else
     _fatalError "Internal error"
 fi
