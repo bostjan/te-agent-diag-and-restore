@@ -161,6 +161,8 @@ ip -6 neigh    > $DATADIRNAME/sys-ip-6-neigh.out
 ip -4 route    > $DATADIRNAME/sys-ip-4-route.out
 ip -6 route    > $DATADIRNAME/sys-ip-6-route.out
 
+cat /etc/localtime   > $DATADIRNAME/etc-localtime
+
 
 _echo "  Disk information..."
 # /dev/nvmeXnX devices are not supported by hdparm
