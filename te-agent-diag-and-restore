@@ -180,7 +180,7 @@ else
     _fatalError "Internal error"
 fi
 mkdir -p $DATADIRNAME/var/lib
-cp -pR   /var/lib/dhcp*   $DATADIRNAME/var/lib/
+cp -pR   /var/lib/dhc*   $DATADIRNAME/var/lib/   # dhclient, dhcp
 
 
 _echo "  Disk information..."
