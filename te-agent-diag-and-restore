@@ -164,6 +164,25 @@ ip -6 route    > $DATADIRNAME/sys-ip-6-route.out
 cat /etc/localtime   > $DATADIRNAME/etc-localtime
 
 
+_echo "  Network interface configuration and dhcp information..."
+if [ "$AGENT_OS_DISTRO" == "ubuntu" ]; then
+    mkdir -p                $DATADIRNAME/etc
+    cp -pR   /etc/network   $DATADIRNAME/etc/
+
+    mkdir -p                   $DATADIRNAME/run
+    cp -pR   /run/network      $DATADIRNAME/run/
+    cp -pR   /run/resolvconf   $DATADIRNAME/run/
+elif [ "$AGENT_OS_DISTRO" == "redhat" ]; then
+    mkdir -p                                  $DATADIRNAME/etc/sysconfig
+    cp -pR   /etc/sysconfig/network           $DATADIRNAME/etc/sysconfig/
+    cp -pR   /etc/sysconfig/network-scripts   $DATADIRNAME/etc/sysconfig/
+else
+    _fatalError "Internal error"
+fi
+mkdir -p $DATADIRNAME/var/lib
+cp -pR   /var/lib/dhcp*   $DATADIRNAME/var/lib/
+
+
 _echo "  Disk information..."
 # /dev/nvmeXnX devices are not supported by hdparm
 for DISKDEV in `cd /dev && ls sd? xvd?`; do
