@@ -144,9 +144,21 @@ _echo "  Hardware and basic host information..."
 dmidecode      > $DATADIRNAME/sys-dmidecode.out || true   # Does not work in containers
 lspci          > $DATADIRNAME/sys-lspci.out
 lsusb          > $DATADIRNAME/sys-lsusb.out
+
+# List all devs:
+find /dev ! -type d | xargs ls -la > $DATADIRNAME/sys-ls-dev.out
+
+# Storage data
+lvs -v         > $DATADIRNAME/sys-lvm-lvs.out
+lvdisplay -v   > $DATADIRNAME/sys-lvm-lvdisplay.out
+vgs -v         > $DATADIRNAME/sys-lvm-vgs.out
+vgdisplay -v   > $DATADIRNAME/sys-lvm-vgdisplay.out
+pvs -v         > $DATADIRNAME/sys-lvm-pvs.out
+pvdisplay -v   > $DATADIRNAME/sys-lvm-pvdisplay.out
 mount          > $DATADIRNAME/sys-mount.out
 df -h          > $DATADIRNAME/sys-df-h.out
 df -ih         > $DATADIRNAME/sys-df-ih.out
+
 free           > $DATADIRNAME/sys-free.out
 uname -a       > $DATADIRNAME/sys-uname-a.out
 export         > $DATADIRNAME/sys-export.out
