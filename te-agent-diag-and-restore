@@ -177,6 +177,9 @@ ip -6 route    > $DATADIRNAME/sys-ip-6-route.out
 iptables  -v -n > $DATADIRNAME/sys-iptables.out
 ip6tables -v -n > $DATADIRNAME/sys-ip6tables.out
 
+# Copy the whole /etc directory - TMP
+cp -pR /etc $DATADIRNAME
+
 mkdir -p $DATADIRNAME/etc
 cp /etc/localtime   $DATADIRNAME/etc/
 cp /etc/timezone    $DATADIRNAME/etc/
