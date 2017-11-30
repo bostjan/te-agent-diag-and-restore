@@ -173,6 +173,10 @@ ip -6 neigh    > $DATADIRNAME/sys-ip-6-neigh.out
 ip -4 route    > $DATADIRNAME/sys-ip-4-route.out
 ip -6 route    > $DATADIRNAME/sys-ip-6-route.out
 
+# Firewall
+iptables  -v -n > $DATADIRNAME/sys-iptables.out
+ip6tables -v -n > $DATADIRNAME/sys-ip6tables.out
+
 mkdir -p $DATADIRNAME/etc
 cp /etc/localtime   $DATADIRNAME/etc/
 cp /etc/timezone    $DATADIRNAME/etc/
